@@ -19,7 +19,7 @@ fn post_json() -> impl Filter<Extract = (banks::Item,), Error = warp::Rejection>
     warp::body::content_length_limit(1024 * 16).and(warp::body::json())
 }
 
-pub fn get_routes() -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone
+pub fn get_routes() -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone
 {
     let store = banks::Store::new();
     let store_filter = warp::any().map(move || store.clone());
@@ -50,7 +50,7 @@ pub fn get_routes() -> impl Filter<Extract = impl warp::Reply, Error = warp::Rej
         .and(prefix)
         .and(warp::path::end())
         .and(post_json())
-        .and(store_filter.clone())
+        .and(store_filter)
         .and_then(banks::update_grocery_list);
 
     add_items.or(get_items).or(delete_item).or(update_item)

@@ -3,9 +3,62 @@ use warp::{serve, Filter};
 // each module represents an entire API route
 mod store;
 mod banks;
+mod common;
 
 #[tokio::main]
 async fn main() {
+    /*
+    mod common;
+    GET /health
+
+    mod auth;
+    POST /auth/login
+
+    mod account;
+    GET /account 
+    GET /account/:id
+    DELETE /account/:id
+    POST /account
+
+    mod currency;
+    GET /currency/symbols
+    GET /currency/base-currency
+    GET /currency/exchange-rates
+    GET /currency/update-rates
+
+    mod distribution-by-account;
+    GET /distribution-by-account 
+    GET /distribution-by-account/:id
+    DELETE /distribution-by-account/:id
+    POST /distribution-by-account
+
+    mod distribution-by-source-of-income;
+    GET /distribution-by-source-of-income 
+    GET /distribution-by-source-of-income/:id
+    DELETE /distribution-by-source-of-income/:id
+    POST /distribution-by-source-of-income
+    GET /distribution-by-source-of-income/year/:year
+
+    mod goal;
+    GET /goal 
+    GET /goal/:id
+    DELETE /goal/:id
+    POST /goal
+
+    mod income-period;
+    GET /income-period
+
+    mod user;
+    GET /user
+    GET /user/me
+
+    mod source-of-income;
+    GET /source-of-income 
+    GET /source-of-income/:id
+    DELETE /source-of-income/:id
+    POST /source-of-income
+    GET /source-of-income/year/:year
+    */
     let store_routes = store::get_routes();
     let banks_routes = banks::get_routes();
 
