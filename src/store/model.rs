@@ -4,17 +4,17 @@ use std::{collections::HashMap};
 use std::sync::Arc;
 use serde::{Serialize, Deserialize};
 
-use crate::common::Currency;
+use crate::currency::Currency;
 
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Id {
-    id: i32,
+    id: u32,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Item {
-    id: i32,
+    id: u32,
     name: String,
     person_id: i32,
     currency: Currency,
@@ -29,7 +29,7 @@ pub struct Item {
 }
 
 
-pub type Items = HashMap<i32, Item>;
+pub type Items = HashMap<u32, Item>;
 
 #[derive(Clone, Debug)]
 pub struct Store {
