@@ -40,9 +40,9 @@ pub struct Item {
 pub type Items = Vec<Item>;
 
 #[derive(Clone, Deserialize, Serialize, Debug)]
-pub struct ExchangeRate {
-    from_currency: Currency,
-    to_currency: Currency,
+#[allow(non_snake_case)] pub struct ExchangeRate {
+    fromCurrency: Currency,
+    toCurrency: Currency,
     rate: f64,
 }
 
@@ -86,8 +86,8 @@ impl Store {
         let rates = self.rates.read();
         for (key, value) in rates.iter() {
             result.push(ExchangeRate {
-                from_currency: key.0.to_owned(),
-                to_currency: key.1.to_owned(),
+                fromCurrency: key.0.to_owned(),
+                toCurrency: key.1.to_owned(),
                 rate: *value,
             });
         }
