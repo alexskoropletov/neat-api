@@ -22,9 +22,9 @@
 - [ ] POST /account
 
 - [X] GET /currency/symbols 
-- [ ] GET /currency/base-currency
-- [ ] GET /currency/exchange-rates
-- [ ] GET /currency/update-rates
+- [X] GET /currency/base-currency
+- [X] GET /currency/exchange-rates
+- [X] GET /currency/update-rates
 
 - [ ] GET /distribution-by-account 
 - [ ] GET /distribution-by-account/:id
