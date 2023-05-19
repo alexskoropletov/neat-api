@@ -1,51 +1,53 @@
-## backend API built with Rust
+## Backend API built with Rust
 
-TODO: 
-    - [X] :check_mark_button: add .env file and expect variables to exist
-    - [ ] copy API routes structure from ur-be project backend
-        ```
-        GET /health
-        POST /auth/login
+# TODO: 
+- [X] add .env file and expect variables to exist
+- [ ] copy API routes structure from ur-be project backend
+- [ ] apply JWT logic
+- [ ] rebuid whole ur-be DB structure in memory
+- [ ] connect to DB (https://github.com/iamhabbeboy/rest-api-actix-web/blob/master/src/db.rs)
+    - [ ] DB migrations?
+- [ ] use this backend in ur-be 
+- [ ] build a cron job to update currency exchange rates
 
-        GET /account 
-        GET /account/:id
-        DELETE /account/:id
-        POST /account
 
-        GET /currency/symbols
-        GET /currency/base-currency
-        GET /currency/exchange-rates
-        GET /currency/update-rates
+# API routes to implement
+- [ ] GET /health
+- [ ] POST /auth/login
 
-        GET /distribution-by-account 
-        GET /distribution-by-account/:id
-        DELETE /distribution-by-account/:id
-        POST /distribution-by-account
+- [ ] GET /account 
+- [ ] GET /account/:id
+- [ ] DELETE /account/:id
+- [ ] POST /account
 
-        GET /distribution-by-source-of-income 
-        GET /distribution-by-source-of-income/:id
-        DELETE /distribution-by-source-of-income/:id
-        POST /distribution-by-source-of-income
-        GET /distribution-by-source-of-income/year/:year
+- [X] GET /currency/symbols 
+- [ ] GET /currency/base-currency
+- [ ] GET /currency/exchange-rates
+- [ ] GET /currency/update-rates
 
-        GET /goal 
-        GET /goal/:id
-        DELETE /goal/:id
-        POST /goal
+- [ ] GET /distribution-by-account 
+- [ ] GET /distribution-by-account/:id
+- [ ] DELETE /distribution-by-account/:id
+- [ ] POST /distribution-by-account
 
-        GET /income-period
+- [ ] GET /distribution-by-source-of-income 
+- [ ] GET /distribution-by-source-of-income/:id
+- [ ] DELETE /distribution-by-source-of-income/:id
+- [ ] POST /distribution-by-source-of-income
+- [ ] GET /distribution-by-source-of-income/year/:year
 
-        GET /user
-        GET /user/me
+- [ ] GET /goal 
+- [ ] GET /goal/:id
+- [ ] DELETE /goal/:id
+- [ ] POST /goal
 
-        GET /source-of-income 
-        GET /source-of-income/:id
-        DELETE /source-of-income/:id
-        POST /source-of-income
-        GET /source-of-income/year/:year
-        ```
-    - [ ] apply JWT logic
-    - [ ] rebuid whole ur-be DB structure in memory
-    - [ ] connect to DB (https://github.com/iamhabbeboy/rest-api-actix-web/blob/master/src/db.rs)
-        - [ ] DB migrations?
-    - [ ] use this backend in ur-be 
+- [ ] GET /income-period
+
+- [ ] GET /user
+- [ ] GET /user/me
+
+- [ ] GET /source-of-income 
+- [ ] GET /source-of-income/:id
+- [ ] DELETE /source-of-income/:id
+- [ ] POST /source-of-income
+- [ ] GET /source-of-income/year/:year
