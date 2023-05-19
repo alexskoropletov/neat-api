@@ -1,14 +1,13 @@
 use parking_lot::RwLock;
-use std::collections::HashMap;
 use std::sync::Arc;
 use serde::{Serialize, Deserialize};
 use core::str::{FromStr};
 
-#[derive(Debug, Deserialize, Serialize, Clone)]
-pub enum Currency {
-    Usd,
-    Eur,
-    Rub,
+#[derive(Debug, Deserialize, Serialize, Clone, Hash, Eq, PartialEq)]
+#[allow(clippy::upper_case_acronyms)] pub enum Currency {
+    USD,
+    EUR,
+    RUB,
 }
 
 impl FromStr for Currency {
@@ -16,9 +15,9 @@ impl FromStr for Currency {
 
     fn from_str(input: &str) -> Result<Currency, Self::Err> {
         match input {
-            "USD" => Ok(Currency::Usd),
-            "EUR" => Ok(Currency::Eur),
-            "RUB" => Ok(Currency::Rub),
+            "USD" => Ok(Currency::USD),
+            "EUR" => Ok(Currency::EUR),
+            "RUB" => Ok(Currency::RUB),
             _ => Err(()),
         }
     }
@@ -26,16 +25,16 @@ impl FromStr for Currency {
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Id {
-    code: String,
+    code: Currency,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Item {
-    code: String,
-    name: Currency,
+    code: Currency,
+    name: String,
 }
 
-pub type Items = HashMap<Currency, Item>;
+pub type Items = Vec<Item>;
 
 #[derive(Clone, Debug)]
 pub struct Store {
@@ -44,9 +43,14 @@ pub struct Store {
 
 impl Store {
     pub fn new() -> Self {
-        Store {
-            currency: Arc::new(RwLock::new(HashMap::new())),
-        }
+        let store = Store {
+            currency: Arc::new(RwLock::new(Vec::new())),
+        };
+        store.currency.write().push(Item { code: Currency::USD, name: "United States Dollar".to_string() });
+        store.currency.write().push(Item { code: Currency::EUR, name: "Euro".to_string() });
+        store.currency.write().push(Item { code: Currency::RUB, name: "Russian Ruble".to_string() });
+
+        store
     }
 }
 
