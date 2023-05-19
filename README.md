@@ -7,6 +7,7 @@
 - [ ] rebuid whole ur-be DB structure in memory
 - [ ] connect to DB (https://github.com/iamhabbeboy/rest-api-actix-web/blob/master/src/db.rs)
     - [ ] DB migrations?
+    - [ ] load common static data to memory (currencies, rates, etc.)
 - [ ] use this backend in ur-be 
 - [ ] build a cron job to update currency exchange rates
 
