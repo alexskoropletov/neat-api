@@ -10,6 +10,7 @@
     - [ ] load common static data to memory (currencies, rates, etc.)
 - [ ] use this backend in ur-be 
 - [ ] build a cron job to update currency exchange rates
+- [ ] cover with integration tests each endpoit
 
 
 # API routes to implement
