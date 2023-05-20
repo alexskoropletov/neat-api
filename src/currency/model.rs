@@ -52,7 +52,6 @@ pub type ExchangeRates = Vec<ExchangeRate>;
 #[derive(Clone, Debug)]
 pub struct Store {
     currency: Arc<RwLock<Items>>,
-    // TODO: custom toJson for HashMap<(Currency, Currency), f64>
     rates: Arc<RwLock<HashMap<(Currency, Currency), f64>>>,
 }
 
@@ -66,8 +65,8 @@ pub struct Store {
  */
 
 impl Store {
-    pub fn new() -> Self {
-        let store = Store {
+    pub async fn new() -> Self {
+        let mut store = Store {
             currency: Arc::new(RwLock::new(Vec::new())),
             rates: Arc::new(RwLock::new(HashMap::new())),
         };
@@ -75,7 +74,13 @@ impl Store {
         store.currency.write().push(Item { code: Currency::EUR, name: "Euro".to_string() });
         store.currency.write().push(Item { code: Currency::RUB, name: "Russian Ruble".to_string() });
 
-        // TODO: add default rates
+        let result = update(store.clone()).await;
+        if let Some(updated_store) = result {
+            println!("[>] Default store complete {:?}", updated_store);
+            store = updated_store;
+        } else {
+            println!("[!] Failed to update default store");
+        }
 
         store
     }

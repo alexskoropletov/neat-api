@@ -5,8 +5,9 @@ use warp::{serve, Filter};
 // each module represents an entire API route
 mod banks;
 mod store;
-// mod common;
+mod jwt;
 mod currency;
+mod health;
 
 #[tokio::main]
 async fn main() {
@@ -63,9 +64,13 @@ async fn main() {
     POST /source-of-income
     GET /source-of-income/year/:year
     */
-    let currency_routes = currency::get_routes();
+
+
+    let health_check_routes = health::get_routes();
+    let currency_routes = currency::get_routes().await;
     let store_routes = store::get_routes();
     let banks_routes = banks::get_routes();
+    let jwt_routes = jwt::get_routes();
 
     let port: u16 = match env::var("PORT") {
         Ok(val) => val.parse::<u16>().unwrap_or(3030),
@@ -73,9 +78,11 @@ async fn main() {
     };
 
     serve(
-        currency_routes
+        health_check_routes
+            .or(currency_routes)
             .or(store_routes)
             .or(banks_routes)
+            .or(jwt_routes)
         )
         .run(([127, 0, 0, 1], port))
         .await

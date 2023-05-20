@@ -14,8 +14,8 @@
 
 
 # API routes to implement
-- [ ] GET /health
-- [ ] POST /auth/login
+- [X] GET /health
+- [X] POST /auth/login
 
 - [ ] GET /account 
 - [ ] GET /account/:id
