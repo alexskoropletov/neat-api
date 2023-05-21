@@ -17,15 +17,25 @@
 - [X] GET /health
 - [X] POST /auth/login
 
-- [ ] GET /account 
-- [ ] GET /account/:id
-- [ ] DELETE /account/:id
-- [ ] POST /account
-
 - [X] GET /currency/symbols 
 - [X] GET /currency/base-currency
 - [X] GET /currency/exchange-rates
 - [X] GET /currency/update-rates
+
+- [X] GET /income-period
+
+- [ ] GET /user
+- [ ] GET /user/me
+
+- [ ] GET /goal 
+- [ ] GET /goal/:id
+- [ ] DELETE /goal/:id
+- [ ] POST /goal
+
+- [ ] GET /account 
+- [ ] GET /account/:id
+- [ ] DELETE /account/:id
+- [ ] POST /account
 
 - [ ] GET /distribution-by-account 
 - [ ] GET /distribution-by-account/:id
@@ -37,16 +47,6 @@
 - [ ] DELETE /distribution-by-source-of-income/:id
 - [ ] POST /distribution-by-source-of-income
 - [ ] GET /distribution-by-source-of-income/year/:year
-
-- [ ] GET /goal 
-- [ ] GET /goal/:id
-- [ ] DELETE /goal/:id
-- [ ] POST /goal
-
-- [ ] GET /income-period
-
-- [ ] GET /user
-- [ ] GET /user/me
 
 - [ ] GET /source-of-income 
 - [ ] GET /source-of-income/:id

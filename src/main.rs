@@ -8,69 +8,18 @@ mod store;
 mod jwt;
 mod currency;
 mod health;
+mod income_period;
 
 #[tokio::main]
 async fn main() {
     dotenv().ok();
-    /*
-    mod common;
-    GET /health
-
-    mod auth;
-    POST /auth/login
-
-    mod account;
-    GET /account
-    GET /account/:id
-    DELETE /account/:id
-    POST /account
-
-    mod currency;
-    + GET /currency/symbols
-    GET /currency/base-currency
-    GET /currency/exchange-rates
-    GET /currency/update-rates
-
-    mod distribution-by-account;
-    GET /distribution-by-account
-    GET /distribution-by-account/:id
-    DELETE /distribution-by-account/:id
-    POST /distribution-by-account
-
-    mod distribution-by-source-of-income;
-    GET /distribution-by-source-of-income
-    GET /distribution-by-source-of-income/:id
-    DELETE /distribution-by-source-of-income/:id
-    POST /distribution-by-source-of-income
-    GET /distribution-by-source-of-income/year/:year
-
-    mod goal;
-    GET /goal
-    GET /goal/:id
-    DELETE /goal/:id
-    POST /goal
-
-    mod income-period;
-    GET /income-period
-
-    mod user;
-    GET /user
-    GET /user/me
-
-    mod source-of-income;
-    GET /source-of-income
-    GET /source-of-income/:id
-    DELETE /source-of-income/:id
-    POST /source-of-income
-    GET /source-of-income/year/:year
-    */
-
 
     let health_check_routes = health::get_routes();
     let currency_routes = currency::get_routes().await;
     let store_routes = store::get_routes();
     let banks_routes = banks::get_routes();
     let jwt_routes = jwt::get_routes();
+    let income_period_routes = income_period::get_routes();
 
     let port: u16 = match env::var("PORT") {
         Ok(val) => val.parse::<u16>().unwrap_or(3030),
@@ -83,6 +32,7 @@ async fn main() {
             .or(store_routes)
             .or(banks_routes)
             .or(jwt_routes)
+            .or(income_period_routes)
         )
         .run(([127, 0, 0, 1], port))
         .await
