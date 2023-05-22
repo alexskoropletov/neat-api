@@ -1,7 +1,7 @@
 use warp::Filter;
-use crate::jwt;
+use crate::auth;
 
-fn json_body() -> impl Filter<Extract = (jwt::Auth,), Error = warp::Rejection> + Clone {
+fn json_body() -> impl Filter<Extract = (auth::Auth,), Error = warp::Rejection> + Clone {
     warp::body::content_length_limit(1024 * 16).and(warp::body::json())
 }
 
@@ -14,5 +14,5 @@ pub fn get_routes() -> impl Filter<Extract = (impl warp::Reply,), Error = warp::
         .and(warp::path("login"))
         .and(warp::path::end())
         .and(json_body())
-        .and_then(jwt::get_token)
+        .and_then(auth::get_token)
 }

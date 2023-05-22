@@ -1,5 +1,6 @@
 use warp::Filter;
 use crate::health;
+use crate::auth::with_auth;
 
 pub fn get_routes() -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone
 {
@@ -7,6 +8,7 @@ pub fn get_routes() -> impl Filter<Extract = (impl warp::Reply,), Error = warp::
     
     warp::get()
         .and(prefix)
+        .and(with_auth())
         .and(warp::path::end())
         .and_then(health::check)
 }

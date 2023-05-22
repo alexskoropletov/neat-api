@@ -3,7 +3,7 @@
 # TODO: 
 - [X] add .env file and expect variables to exist
 - [ ] copy API routes structure from ur-be project backend
-- [ ] apply JWT logic
+- [X] apply JWT logic
 - [ ] rebuid whole ur-be DB structure in memory
 - [ ] connect to DB (https://github.com/iamhabbeboy/rest-api-actix-web/blob/master/src/db.rs)
     - [ ] DB migrations?
