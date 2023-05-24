@@ -1,5 +1,5 @@
 use warp::Filter;
-use crate::currency;
+use crate::{currency, auth::with_auth};
 
 pub async fn get_routes() -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone
 {
@@ -12,6 +12,7 @@ pub async fn get_routes() -> impl Filter<Extract = (impl warp::Reply,), Error = 
         .and(prefix)
         .and(warp::path("symbols"))
         .and(warp::path::end())
+        .and(with_auth())
         .and(store_filter.clone())
         .and_then(currency::get_list);
 
@@ -19,12 +20,14 @@ pub async fn get_routes() -> impl Filter<Extract = (impl warp::Reply,), Error = 
         .and(prefix)
         .and(warp::path("base-currency"))
         .and(warp::path::end())
+        .and(with_auth())
         .and_then(currency::get_base_currency);
 
     let exchange_rates = warp::get()
         .and(prefix)
         .and(warp::path("exchange-rates"))
         .and(warp::path::end())
+        .and(with_auth())
         .and(store_filter.clone())
         .and_then(currency::get_exchange_rates);
 
@@ -32,11 +35,9 @@ pub async fn get_routes() -> impl Filter<Extract = (impl warp::Reply,), Error = 
         .and(prefix)
         .and(warp::path("update-rates"))
         .and(warp::path::end())
+        .and(with_auth())
         .and(store_filter)
-        .and_then(currency::update_rates)
-        
-        // .recover(currency::handle_rejection)
-        ;
+        .and_then(currency::update_rates);
     
 
     symbols

@@ -1,10 +1,8 @@
-use serde::Serialize;
 use std::convert::Infallible;
 use thiserror::Error;
 use warp::{http::StatusCode, Rejection, Reply};
-// use std::collections::HashMap;
-// use std::sync::Arc;
 
+use crate::common::responses::ErrorResponse;
 
 #[derive(Error, Debug)]
 pub enum Error {
@@ -22,17 +20,7 @@ pub enum Error {
     NoPermission,
 }
 
-#[derive(Serialize, Debug)]
-struct ErrorResponse {
-    message: String,
-    status: String,
-}
-
 impl warp::reject::Reject for Error {}
-
-pub type Result<T> = std::result::Result<T, Error>;
-pub type WebResult<T> = std::result::Result<T, Rejection>;
-// pub type Users = Arc<HashMap<String, User>>;
 
 #[derive(Clone)]
 pub struct User {

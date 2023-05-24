@@ -1,13 +1,13 @@
-use serde::{Serialize, Deserialize};
-use jsonwebtoken::{encode, decode, Header, Algorithm, Validation, EncodingKey, DecodingKey};
-// use jsonwebtoken::{encode, Header, EncodingKey};
+use crate::common::errors::Error;
+use crate::common::responses::{Result, WebResult};
+use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
+use serde::{Deserialize, Serialize};
 use std::env;
 use warp::{
     filters::header::headers_cloned,
     http::header::{HeaderMap, HeaderValue, AUTHORIZATION},
     reject, Filter, Rejection,
 };
-use crate::errors::{WebResult, Error, Result};
 
 const BEARER: &str = "Bearer ";
 
@@ -17,7 +17,6 @@ pub struct Claims {
     company: String,
     exp: usize,
 }
-
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Auth {
@@ -37,36 +36,32 @@ pub struct InvalidCredentials;
 
 impl reject::Reject for InvalidCredentials {}
 
-pub async fn get_token(
-    auth: Auth
-    ) -> WebResult<String> {
+pub async fn get_token(auth: Auth) -> WebResult<String> {
+    println!("Auth {:?}", auth);
 
-        println!("Auth {:?}", auth);
+    if auth.login != "admin" || auth.password != "admin" {
+        return Err(reject::custom(Error::WrongCredentials));
+    }
 
-        if auth.login != "admin" || auth.password != "admin" {
-            return Err(reject::custom(Error::WrongCredentials));
-        }
+    let claims = Claims {
+        sub: String::from("admin"),
+        company: String::from("admin"),
+        exp: 10000000000,
+    };
+    let secret = get_secret();
 
-        let claims = Claims {
-            sub: String::from("admin"),
-            company: String::from("admin"),
-            exp: 10000000000,
-        };
-        let secret = get_secret();
+    println!("secret {:?}", secret);
 
-        println!("secret {:?}", secret);
+    let header = Header::new(Algorithm::HS512);
+    let token = match encode(&header, &claims, &EncodingKey::from_secret(secret.as_ref())) {
+        Ok(token) => token,
+        Err(_) => return Err(reject::custom(Error::JWTTokenCreation)),
+    };
 
-        let header = Header::new(Algorithm::HS512);
-        let token = match encode(&header, &claims, &EncodingKey::from_secret(secret.as_ref())) {
-            Ok(token) => token,
-            Err(_) => return Err(reject::custom(Error::JWTTokenCreation)),
-        };
+    println!("token {:?}", token);
 
-
-        println!("token {:?}", token);
-    
-        // Ok(warp::reply::json(&token))
-        Ok(token)
+    // Ok(warp::reply::json(&token))
+    Ok(token)
 }
 
 pub fn with_auth() -> impl Filter<Extract = (String,), Error = Rejection> + Clone {

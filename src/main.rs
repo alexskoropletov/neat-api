@@ -3,9 +3,10 @@ use std::env;
 use warp::{serve, Filter};
 
 // each module represents an entire API route
-mod errors;
-mod banks;
-mod store;
+mod common {
+    pub mod errors;
+    pub mod responses;
+}
 mod auth;
 mod currency;
 mod health;
@@ -17,9 +18,7 @@ async fn main() {
 
     let health_check_routes = health::get_routes();
     let currency_routes = currency::get_routes().await;
-    let store_routes = store::get_routes();
-    let banks_routes = banks::get_routes();
-    let jwt_routes = auth::get_routes();
+    let auth_routes = auth::get_routes();
     let income_period_routes = income_period::get_routes();
 
     let port: u16 = match env::var("PORT") {
@@ -30,12 +29,10 @@ async fn main() {
     serve(
         health_check_routes
             .or(currency_routes)
-            .or(store_routes)
-            .or(banks_routes)
-            .or(jwt_routes)
+            .or(auth_routes)
             .or(income_period_routes)
-            .recover(errors::handle_rejection)
-        )
-        .run(([127, 0, 0, 1], port))
-        .await
+            .recover(common::errors::handle_rejection),
+    )
+    .run(([127, 0, 0, 1], port))
+    .await
 }

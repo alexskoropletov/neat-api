@@ -1,5 +1,4 @@
-pub async fn check(uid: String) -> Result<impl warp::Reply, warp::Rejection> {
-    println!("health check");
-    println!("uid {:?}", uid);
+pub async fn check() -> Result<impl warp::Reply, warp::Rejection> {
+    println!("[+] health check");
     Ok(warp::reply::json(&"Ok"))
 }
