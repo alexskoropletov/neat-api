@@ -103,17 +103,3 @@ fn jwt_from_header(headers: &HeaderMap<HeaderValue>) -> Result<String> {
     }
     Ok(auth_header.trim_start_matches(BEARER).to_owned())
 }
-
-// pub fn get_claims(token : String) -> Result<(), ()> {
-//     let secret = get_secret();
-//     let token = decode::<Claims>(&token, &DecodingKey::from_secret(secret.as_ref()), &Validation::default());
-//     match token {
-//         Ok(token) => {
-//             println!("{:?}", token.claims);
-//             Some(())
-//         },
-//         Err(_) => None,
-//     };
-
-//     Ok(())
-// }

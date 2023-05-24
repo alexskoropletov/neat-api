@@ -1,11 +1,9 @@
 use warp::Filter;
-use crate::{currency, auth::with_auth};
+use crate::{currency, data_store, auth::with_auth};
 
-pub async fn get_routes() -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone
+pub async fn get_routes(store: data_store::Store) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone
 {
-    let store = currency::Store::new().await;
     let store_filter = warp::any().map(move || store.clone());
-
     let prefix = warp::path!("currency" / ..);
 
     let symbols = warp::get()
