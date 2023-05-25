@@ -1,5 +1,6 @@
 use crate::common::errors::Error;
 use crate::common::responses::{Result, WebResult};
+use crate::common::stdout;
 use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 use std::env;
@@ -27,7 +28,10 @@ pub struct Auth {
 fn get_secret() -> String {
     match env::var("JWT_SECRET") {
         Ok(val) => val,
-        Err(_) => String::from("secret"),
+        Err(_) => {
+            stdout::warn("JWT_SECRET not set, using default", ());
+            String::from("secret")
+        }
     }
 }
 
@@ -37,7 +41,7 @@ pub struct InvalidCredentials;
 impl reject::Reject for InvalidCredentials {}
 
 pub async fn get_token(auth: Auth) -> WebResult<String> {
-    println!("Auth {:?}", auth);
+    stdout::debug("Auth", &auth);
 
     if auth.login != "admin" || auth.password != "admin" {
         return Err(reject::custom(Error::WrongCredentials));
@@ -50,7 +54,7 @@ pub async fn get_token(auth: Auth) -> WebResult<String> {
     };
     let secret = get_secret();
 
-    println!("secret {:?}", secret);
+    stdout::debug("secret", &secret);
 
     let header = Header::new(Algorithm::HS512);
     let token = match encode(&header, &claims, &EncodingKey::from_secret(secret.as_ref())) {
@@ -58,7 +62,7 @@ pub async fn get_token(auth: Auth) -> WebResult<String> {
         Err(_) => return Err(reject::custom(Error::JWTTokenCreation)),
     };
 
-    println!("token {:?}", token);
+    stdout::debug("token", &token);
 
     // Ok(warp::reply::json(&token))
     Ok(token)
@@ -81,7 +85,8 @@ async fn authorize(headers: HeaderMap<HeaderValue>) -> WebResult<String> {
                 &Validation::new(Algorithm::HS512),
             )
             .map_err(|_| reject::custom(Error::JWTToken))?;
-            println!("decoded {:?}", decoded);
+            
+            stdout::debug("decoded", &decoded);
 
             Ok(decoded.claims.sub)
         }

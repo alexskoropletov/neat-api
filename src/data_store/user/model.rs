@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use crate::data_store::Store;
+use crate::{data_store::Store, common::stdout};
 
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct Id {
@@ -28,6 +28,7 @@ pub async fn initiate(store: Store) -> Option<Store> {
         login: "admin".to_string(),
         password: "admin".to_string(),
     });
+    stdout::debug("Users", &store.users.read());
 
     Some(store)
 }

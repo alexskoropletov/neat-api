@@ -24,8 +24,8 @@
 
 - [X] GET /income-period
 
-- [ ] GET /user
-- [ ] GET /user/me
+- [X] GET /user
+- [X] GET /user/me
 
 - [ ] GET /goal 
 - [ ] GET /goal/:id

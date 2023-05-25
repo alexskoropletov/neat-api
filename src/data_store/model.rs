@@ -1,3 +1,4 @@
+use crate::common::stdout;
 use crate::data_store::{currency, user};
 use parking_lot::RwLock;
 use std::collections::HashMap;
@@ -20,18 +21,18 @@ impl Store {
 
         let result = currency::initiate(store.clone()).await;
         if let Some(updated_store) = result {
-            println!("[>] Default store complete {:?}", updated_store);
+            stdout::success("Default currency store complete", updated_store.clone());
             store = updated_store;
         } else {
-            println!("[!] Failed to update default store");
+            stdout::fail("Failed to update default user store", ());
         }
 
         let result = user::initiate(store.clone()).await;
         if let Some(updated_store) = result {
-            println!("[>] Default store complete {:?}", updated_store);
+            stdout::success("Default user store complete", updated_store.clone());
             store = updated_store;
         } else {
-            println!("[!] Failed to update default store");
+            stdout::fail("Failed to update default user store", ());
         }
 
         store

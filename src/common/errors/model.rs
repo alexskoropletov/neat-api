@@ -2,7 +2,7 @@ use std::convert::Infallible;
 use thiserror::Error;
 use warp::{http::StatusCode, Rejection, Reply};
 
-use crate::common::responses::ErrorResponse;
+use crate::common::{responses::ErrorResponse, stdout};
 
 #[derive(Error, Debug)]
 pub enum Error {
@@ -50,7 +50,7 @@ pub async fn handle_rejection(err: Rejection) -> std::result::Result<impl Reply,
             "Method Not Allowed".to_string(),
         )
     } else {
-        eprintln!("unhandled error: {:?}", err);
+        stdout::error("unhandled error", &err);
         (
             StatusCode::INTERNAL_SERVER_ERROR,
             "Internal Server Error".to_string(),

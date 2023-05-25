@@ -138,6 +138,46 @@
 			]
 		},
 		{
+			"name": "User",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImNvbXBhbnkiOiJhZG1pbiIsImV4cCI6MTAwMDAwMDAwMDB9.SIwJHmsYRa8T8NsdZXj0VA_ybQQzL8IOcy2SO_zDHkJKMJpmDhFGCcXUtrnH-Fp88XF43Li1EVEmI1DT3VVCdQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{rust_be}}/user",
+							"host": [
+								"{{rust_be}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Health check",
 			"request": {
 				"method": "GET",

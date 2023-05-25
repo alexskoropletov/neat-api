@@ -1,9 +1,8 @@
 use warp::Filter;
-use crate::{user, auth::with_auth};
+use crate::{user, auth::with_auth, data_store};
 
-pub async fn get_routes() -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone
+pub async fn get_routes(store: data_store::Store) -> impl Filter<Extract = (impl warp::Reply,), Error = warp::Rejection> + Clone
 {
-    let store = user::Store::new().await;
     let store_filter = warp::any().map(move || store.clone());
 
     let prefix = warp::path!("user" / ..);
