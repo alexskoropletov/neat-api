@@ -33,7 +33,7 @@ async fn main() {
         Err(_) => {
             common::stdout::warn("PORT not set, defaulting to 3030", ());
             3030
-        },
+        }
     };
 
     serve(
