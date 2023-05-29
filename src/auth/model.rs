@@ -1,6 +1,8 @@
 use crate::common::errors::Error;
 use crate::common::responses::{Result, WebResult};
 use crate::common::stdout;
+use crate::data_store;
+use chrono::{Duration, Utc};
 use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 use std::env;
@@ -15,7 +17,9 @@ const BEARER: &str = "Bearer ";
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
     sub: String,
-    company: String,
+    name: String,
+    login: String,
+    email: String,
     exp: usize,
 }
 
@@ -40,18 +44,29 @@ pub struct InvalidCredentials;
 
 impl reject::Reject for InvalidCredentials {}
 
-pub async fn get_token(auth: Auth) -> WebResult<String> {
+pub async fn get_token(store: data_store::Store, auth: Auth) -> WebResult<String> {
     stdout::debug("Auth", &auth);
 
-    if auth.login != "admin" || auth.password != "admin" {
-        return Err(reject::custom(Error::WrongCredentials));
+    let found = match store.users.read().values().find(|u| u.login == auth.login) {
+        Some(user) => {
+            if user.password != auth.password {
+                return Err(reject::custom(Error::WrongCredentials));
+            }
+
+            user
+        }
+        None => return Err(reject::custom(Error::WrongCredentials)),
     }
+    .clone();
 
     let claims = Claims {
-        sub: String::from("admin"),
-        company: String::from("admin"),
-        exp: 10000000000,
+        sub: found.id,
+        name: found.name,
+        login: found.login,
+        email: found.email,
+        exp: (Utc::now() + Duration::days(1)).timestamp() as usize,
     };
+
     let secret = get_secret();
 
     stdout::debug("secret", &secret);
@@ -64,7 +79,6 @@ pub async fn get_token(auth: Auth) -> WebResult<String> {
 
     stdout::debug("token", &token);
 
-    // Ok(warp::reply::json(&token))
     Ok(token)
 }
 
@@ -84,8 +98,11 @@ async fn authorize(headers: HeaderMap<HeaderValue>) -> WebResult<String> {
                 &DecodingKey::from_secret(secret.as_ref()),
                 &Validation::new(Algorithm::HS512),
             )
-            .map_err(|_| reject::custom(Error::JWTToken))?;
-            
+            .map_err(|err| {
+                stdout::error("Authorize with JWT token error", &err);
+                reject::custom(Error::JWTToken)
+            })?;
+
             stdout::debug("decoded", &decoded);
 
             Ok(decoded.claims.sub)
@@ -96,11 +113,11 @@ async fn authorize(headers: HeaderMap<HeaderValue>) -> WebResult<String> {
 
 fn jwt_from_header(headers: &HeaderMap<HeaderValue>) -> Result<String> {
     let header = match headers.get(AUTHORIZATION) {
-        Some(v) => v,
+        Some(value) => value,
         None => return Err(Error::NoAuthHeader),
     };
     let auth_header = match std::str::from_utf8(header.as_bytes()) {
-        Ok(v) => v,
+        Ok(value) => value,
         Err(_) => return Err(Error::NoAuthHeader),
     };
     if !auth_header.starts_with(BEARER) {

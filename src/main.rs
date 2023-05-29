@@ -24,7 +24,7 @@ async fn main() {
 
     let health_check_routes = health::get_routes();
     let currency_routes = currency::get_routes(store.clone()).await;
-    let auth_routes = auth::get_routes();
+    let auth_routes = auth::get_routes(store.clone());
     let income_period_routes = income_period::get_routes();
     let user_routes = user::get_routes(store.clone()).await;
 
